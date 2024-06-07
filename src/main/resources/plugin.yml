@@ -1,0 +1,9 @@
+name: HashBook
+version: '${version}'
+main: xyz.xasmc.hashbook.HashBook
+api-version: '1.18'
+
+depend:
+  - CommandAPI
+softdepend:
+  - NBTAPI
