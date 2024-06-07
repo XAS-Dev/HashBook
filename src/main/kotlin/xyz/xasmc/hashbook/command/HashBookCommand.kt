@@ -20,14 +20,14 @@ object HashBookCommand {
     fun create(): CommandAPICommand {
         val msgTitle = "<dark_aqua>[HashBook]</dark_aqua>"
 
-        val reload = CommandAPICommand("reload")
+        val reloadCommand = CommandAPICommand("reload")
             .executes(CommandExecutor { sender, _ ->
                 sender.sendMiniMessage("$msgTitle <dark_green>重新加载中")
                 HashBook.load()
                 sender.sendMiniMessage("$msgTitle <dark_green>重新加载完成")
             })
 
-        val calcHash = CommandAPICommand("calcHash")
+        val calcHashCommand = CommandAPICommand("calcHash")
             .executes(CommandExecutor { sender, args ->
                 val player = checkPlayer(sender) ?: return@CommandExecutor
                 val (item) = checkHandItem(player, Material.WRITTEN_BOOK) ?: return@CommandExecutor
@@ -36,7 +36,7 @@ object HashBookCommand {
                 player.sendMiniMessage("$msgTitle <aqua>hash</aqua>: <green>${hash}")
             })
 
-        val setHash = CommandAPICommand("setHash")
+        val setHashCommand = CommandAPICommand("setHash")
             .withArguments(StringArgument("hash"))
             .executes(CommandExecutor { sender, args ->
                 val player = checkPlayer(sender) ?: return@CommandExecutor
@@ -52,7 +52,7 @@ object HashBookCommand {
                 player.sendMiniMessage("$msgTitle <dark_green>已修改成书哈希 <aqua>old_hash</aqua>: <green>$hash</green> <aqua>new_hash</aqua>: <green>${args["hash"]}</green>")
             })
 
-        val hash = CommandAPICommand("hash")
+        val hashCommand = CommandAPICommand("hash")
             .executes(CommandExecutor { sender, args ->
                 val player = checkPlayer(sender) ?: return@CommandExecutor
                 val (item, hand) = checkHandItem(player, Material.WRITTEN_BOOK) ?: return@CommandExecutor
@@ -60,7 +60,7 @@ object HashBookCommand {
                 player.sendMiniMessage("$msgTitle <dark_green>完成")
             })
 
-        val bookInfo = CommandAPICommand("bookInfo")
+        val bookInfoCommand = CommandAPICommand("bookInfo")
             .executes(CommandExecutor { sender, _ ->
                 val player = checkPlayer(sender) ?: return@CommandExecutor
                 val (item) = checkHandItem(player, Material.WRITTEN_BOOK) ?: return@CommandExecutor
@@ -81,7 +81,7 @@ object HashBookCommand {
             })
 
         val command = CommandAPICommand("hashbook")
-            .withSubcommands(reload, calcHash, setHash, hash, bookInfo)
+            .withSubcommands(reloadCommand, calcHashCommand, setHashCommand, hashCommand, bookInfoCommand)
             .executes(CommandExecutor { sender, _ ->
                 val mm = MiniMessage.miniMessage()
                 sender.sendMiniMessage("$msgTitle HashBook is Running!")
