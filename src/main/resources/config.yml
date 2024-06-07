@@ -18,4 +18,4 @@ set_hash_when_open_book: true
 set_lore: true
 
 # 简介内容, 使用 MiniMessage 格式, 详见 https://docs.advntr.dev/minimessage/format.html
-lore_content: "<dark_aqua>Recorded by HashBook"
+lore_content: "<dark_aqua>Stored by HashBook"
