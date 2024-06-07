@@ -7,3 +7,9 @@ depend:
   - CommandAPI
 softdepend:
   - NBTAPI
+
+permissions:
+  xasmc.hashbook.command.sethash:
+    default: op
+  xasmc.hashbook.command.reload:
+    default: op

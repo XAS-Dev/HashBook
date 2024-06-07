@@ -1,7 +1,6 @@
 package xyz.xasmc.hashbook.command
 
 import dev.jorel.commandapi.CommandAPICommand
-import dev.jorel.commandapi.CommandPermission
 import dev.jorel.commandapi.arguments.StringArgument
 import dev.jorel.commandapi.executors.CommandExecutor
 import org.bukkit.Bukkit
@@ -21,7 +20,7 @@ object HashBookCommand {
         val msgTitle = "<dark_aqua>[HashBook]</dark_aqua>"
 
         val reloadCommand = CommandAPICommand("reload")
-            .withPermission(CommandPermission.OP)
+            .withPermission("xasmc.hashbook.command.reload")
             .executes(CommandExecutor { sender, _ ->
                 sender.sendMiniMessage("$msgTitle <dark_green>重新加载中")
                 HashBook.load()
@@ -38,7 +37,7 @@ object HashBookCommand {
             })
 
         val setHashCommand = CommandAPICommand("setHash")
-            .withPermission(CommandPermission.OP)
+            .withPermission("xasmc.hashbook.command.sethash")
             .withArguments(StringArgument("hash"))
             .executes(CommandExecutor { sender, args ->
                 val player = checkPlayer(sender) ?: return@CommandExecutor
