@@ -21,8 +21,10 @@ object HashBookCommand {
         val msgTitle = "<dark_aqua>[HashBook]</dark_aqua>"
 
         val reload = CommandAPICommand("reload")
-            .executes(CommandExecutor { _, _ ->
+            .executes(CommandExecutor { sender, _ ->
+                sender.sendMiniMessage("$msgTitle <dark_green>重新加载中")
                 HashBook.load()
+                sender.sendMiniMessage("$msgTitle <dark_green>重新加载完成")
             })
 
         val calcHash = CommandAPICommand("calcHash")
@@ -55,6 +57,7 @@ object HashBookCommand {
                 val player = checkPlayer(sender) ?: return@CommandExecutor
                 val (item, hand) = checkHandItem(player, Material.WRITTEN_BOOK) ?: return@CommandExecutor
                 BookUtil.calcAndSetBookHash(item, player, hand)
+                player.sendMiniMessage("$msgTitle <dark_green>完成")
             })
 
         val bookInfo = CommandAPICommand("bookInfo")
@@ -76,7 +79,6 @@ object HashBookCommand {
                 player.sendMiniMessage("<aqua>author</aqua>: <green>${author}")
                 player.sendMiniMessage("<aqua>hash</aqua>: <green>${hash}")
             })
-
 
         val command = CommandAPICommand("hashbook")
             .withSubcommands(reload, calcHash, setHash, hash, bookInfo)
