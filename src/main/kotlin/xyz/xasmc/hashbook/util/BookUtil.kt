@@ -4,10 +4,12 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
+import xyz.xasmc.hashbook.HashBook
 import xyz.xasmc.hashbook.service.ItemDataServices
 import xyz.xasmc.hashbook.service.StorageServices
 import xyz.xasmc.hashbook.util.MessageUtil.debugMiniMessage
 import xyz.xasmc.hashbook.util.MessageUtil.sendMiniMessage
+import java.util.*
 
 object BookUtil {
     @OptIn(ExperimentalStdlibApi::class)
@@ -38,6 +40,13 @@ object BookUtil {
 
         if (!ItemDataServices.hasItemData(newItem, "HashBook.Hash")) {
             val hash = generateHash(bookMeta)
+
+            if (HashBook.config.setLore) {
+                val lore = bookMeta.lore() ?: LinkedList()
+                lore.add(MessageUtil.mm.deserialize(HashBook.config.loreContent))
+                bookMeta.lore(lore)
+                newItem.setItemMeta(bookMeta)
+            }
 
             StorageServices.save(hash, bookMeta.pages())
             player.debugMiniMessage("$msgTitle <aqua>[debug]<dark_green>已存储成书书页</dark_green> <aqua>hash</aqua>: <green>$hash</green> <aqua>meta</aqua>: <green>$bookMeta</green>")

@@ -31,7 +31,9 @@ object ConfigLoader {
                     ItemDataMode.PDC
                 }
             },
-            setHashWhenOpenBook = yamlConfig.getBoolean("set_hash_when_open_book")
+            setHashWhenOpenBook = yamlConfig.getBoolean("set_hash_when_open_book"),
+            setLore = yamlConfig.getBoolean("set_lore"),
+            loreContent = yamlConfig.getString("lore_content") ?: "<dark_aqua>Recorded by HashBook",
         )
 
         return config
