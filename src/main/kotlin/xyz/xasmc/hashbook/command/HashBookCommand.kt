@@ -83,7 +83,6 @@ object HashBookCommand {
         val command = CommandAPICommand("hashbook")
             .withSubcommands(reloadCommand, calcHashCommand, setHashCommand, hashCommand, bookInfoCommand)
             .executes(CommandExecutor { sender, _ ->
-                val mm = MiniMessage.miniMessage()
                 sender.sendMiniMessage("$msgTitle HashBook is Running!")
                 sender.sendMiniMessage("<aqua>debug</aqua>: <green>${HashBook.config.debug}")
                 sender.sendMiniMessage("<aqua>storage_mode</aqua>: <green>${HashBook.config.storageMode}")
