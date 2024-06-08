@@ -70,7 +70,9 @@ object BookUtil {
             val hash = HashUtil.HashString(serialized)
             StorageServices.save(hash, serialized)
             val copyMsg = MessageUtil.copyMsg("[点击复制]", hash, "<gold>点击复制")
-            player.debugMiniMessage("$msgTitle <aqua>[debug]<dark_green>已存储成书书页</dark_green> <aqua>hash</aqua>: <green>$hash</green> <gold>$copyMsg</gold> <aqua>meta</aqua>: <green>$bookMeta</green>")
+            player.debugMiniMessage("$msgTitle <aqua>[debug]<dark_green>已存储成书书页</dark_green>")
+            player.debugMiniMessage("$msgTitle <aqua>[debug]<aqua>hash</aqua>: <green>$hash</green> <gold>$copyMsg</gold>")
+            player.debugMiniMessage("$msgTitle <aqua>[debug]<aqua>meta</aqua>: <green>$bookMeta</green>")
 
             newItem = ItemDataServices.setItemData(
                 newItem, "HashBook.Hash", ItemDataServices.DataType.String, hash

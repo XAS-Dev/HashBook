@@ -41,12 +41,14 @@ class OpenBookListener : Listener {
         val bookMeta = item.itemMeta as BookMeta
         bookMeta.pages(BookUtil.deserializePages(StorageServices.read(hash) ?: run {
             val copyMsg = MessageUtil.copyMsg("[点击复制]", hash, "<gold>点击复制")
-            player.sendMiniMessage("$msgTitle <yellow>[warn] 无法读取成书书页, <aqua>hash</aqua>: <green>$hash</green> <gold>$copyMsg</gold>")
+            player.sendMiniMessage("$msgTitle <yellow>[warn] 无法读取成书书页")
+            player.sendMiniMessage("$msgTitle <yellow>[warn] <aqua>hash</aqua>: <green>$hash</green> <gold>$copyMsg</gold>")
             return@onPlayerInteract
         }))
         val copyMsg = MessageUtil.copyMsg("[点击复制]", hash, "<gold>点击复制")
         player.openBook(bookMeta)
-        player.debugMiniMessage("$msgTitle <aqua>[debug] <dark_green>成功替换数据, <aqua>hash</aqua>: <green>$hash</green> <gold>$copyMsg</gold>")
+        player.debugMiniMessage("$msgTitle <aqua>[debug] <dark_green>成功替换数据")
+        player.debugMiniMessage("$msgTitle <aqua>[debug] <aqua>hash</aqua>: <green>$hash</green> <gold>$copyMsg</gold>")
         event.isCancelled = true
     }
 }
