@@ -13,12 +13,11 @@ import org.bukkit.inventory.meta.BookMeta
 import xyz.xasmc.hashbook.HashBook
 import xyz.xasmc.hashbook.service.ItemDataServices
 import xyz.xasmc.hashbook.util.BookUtil
+import xyz.xasmc.hashbook.util.MessageUtil.msgTitle
 import xyz.xasmc.hashbook.util.MessageUtil.sendMiniMessage
 
 object HashBookCommand {
     fun create(): CommandAPICommand {
-        val msgTitle = "<dark_aqua>[HashBook]</dark_aqua>"
-
         val reloadCommand = CommandAPICommand("reload")
             .withPermission("xasmc.hashbook.command.reload")
             .executes(CommandExecutor { sender, _ ->
@@ -57,7 +56,7 @@ object HashBookCommand {
             .executes(CommandExecutor { sender, args ->
                 val player = checkPlayer(sender) ?: return@CommandExecutor
                 val (item, hand) = checkHandItem(player, Material.WRITTEN_BOOK) ?: return@CommandExecutor
-                BookUtil.calcAndSetBookHash(item, player, hand)
+                BookUtil.storeBook(item, player, hand)
                 player.sendMiniMessage("$msgTitle <dark_green>完成")
             })
 

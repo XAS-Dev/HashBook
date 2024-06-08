@@ -1,13 +1,17 @@
 package xyz.xasmc.hashbook.util
 
+import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
+import org.json.simple.JSONArray
+import org.json.simple.parser.JSONParser
 import xyz.xasmc.hashbook.HashBook
 import xyz.xasmc.hashbook.service.ItemDataServices
 import xyz.xasmc.hashbook.service.StorageServices
 import xyz.xasmc.hashbook.util.MessageUtil.debugMiniMessage
+import xyz.xasmc.hashbook.util.MessageUtil.msgTitle
 import xyz.xasmc.hashbook.util.MessageUtil.sendMiniMessage
 import java.util.*
 
@@ -22,25 +26,39 @@ object BookUtil {
         return hash.toHexString()
     }
 
-    fun calcAndSetBookHash(item: ItemStack, player: Player, hand: EquipmentSlot): Boolean {
-        val msgTitle = "<dark_aqua>[HashBook]</dark_aqua>"
-        var newItem = item
+    fun serializePages(pages: List<Component>): String {
+        val serializedPages = LinkedList<String>()
+        pages.forEach {
+            serializedPages.add(MessageUtil.mm.serialize(it))
+        }
+        return JSONArray.toJSONString(serializedPages)
+    }
 
-        val bookMeta = newItem.itemMeta as BookMeta
+    fun deserializePages(content: String): List<Component> {
+        val pages = LinkedList<Component>()
+        val parser = JSONParser()
+        (parser.parse(content) as JSONArray).forEach {
+            pages.add(MessageUtil.mm.deserialize(it as String))
+        }
+        return pages
+    }
+
+    fun storeBook(item: ItemStack, player: Player, hand: EquipmentSlot): Boolean {
+        val bookMeta = item.itemMeta as BookMeta
+
+        var newItem = item.clone()
+        val newBookMeta = bookMeta.clone()
 
         var cleanedPages = false
         var setHash = false
 
         if (bookMeta.hasPages()) {
-            val bookMetaClone = bookMeta.clone()
-            bookMetaClone.pages(listOf())
-            newItem.setItemMeta(bookMetaClone)
+            newBookMeta.pages(listOf())
+            newItem.setItemMeta(newBookMeta)
             cleanedPages = true
         }
 
         if (!ItemDataServices.hasItemData(newItem, "HashBook.Hash")) {
-            val hash = generateHash(bookMeta)
-
             if (HashBook.config.setLore) {
                 val lore = bookMeta.lore() ?: LinkedList()
                 lore.add(MessageUtil.mm.deserialize(HashBook.config.loreContent))
@@ -48,7 +66,9 @@ object BookUtil {
                 newItem.setItemMeta(bookMeta)
             }
 
-            StorageServices.save(hash, bookMeta.pages())
+            val serialized = serializePages(bookMeta.pages())
+            val hash = HashUtil.HashString(serialized)
+            StorageServices.save(hash, serialized)
             player.debugMiniMessage("$msgTitle <aqua>[debug]<dark_green>已存储成书书页</dark_green> <aqua>hash</aqua>: <green>$hash</green> <aqua>meta</aqua>: <green>$bookMeta</green>")
 
             newItem = ItemDataServices.setItemData(
@@ -65,7 +85,7 @@ object BookUtil {
             EquipmentSlot.OFF_HAND -> player.inventory.setItemInOffHand(newItem)
             else -> return run {
                 player.sendMiniMessage("$msgTitle <yellow>[warn] 错误的装备槽")
-                return false
+                false
             }
         }
 

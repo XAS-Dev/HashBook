@@ -7,6 +7,7 @@ import xyz.xasmc.hashbook.HashBook
 
 object MessageUtil {
     val mm = MiniMessage.miniMessage()
+    val msgTitle = "<dark_aqua>[HashBook]</dark_aqua>"
 
     infix fun Player.sendMiniMessage(message: String) =
         this.sendMessage(mm.deserialize(message))
