@@ -9,7 +9,7 @@ interface StorageServices {
     fun search(incompleteHash: String): List<Pair<String, String>>
 
     companion object {
-        lateinit var instance: StorageServices
+        private lateinit var instance: StorageServices
 
         fun load(config: PluginConfig) {
             instance = when (config.storageMode) {

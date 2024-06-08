@@ -23,7 +23,7 @@ interface ItemDataServices {
     fun hasItemData(item: ItemStack, path: String): Boolean
 
     companion object {
-        lateinit var instance: ItemDataServices
+        private lateinit var instance: ItemDataServices
 
         fun load(config: PluginConfig) {
             instance = when (config.itemDataMode) {
