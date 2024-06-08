@@ -19,11 +19,13 @@ HashBook 是一个 Paper 插件, 通过将书籍数据存储在外部, 实现 Mi
 
 ## 注意事项
 
+仅支持 Paper 服务端.
+
 存储后的书籍会删除书页信息, 以便在 Minecraft 中高密度存储书籍, 并防止区块数据溢出.
 
-**由于书页信息被删除, 在存档迁移时可能造成书籍数据丢失**
+**由于书页信息被删除, 在存档迁移时可能造成书籍数据丢失.**
 
-书籍的哈希值将使用 PDC [(Persistent Data Container)](https://docs.papermc.io/paper/dev/pdc) 或 NBT 存储在书籍中。
+书籍的哈希值将使用 PDC [(Persistent Data Container)](https://docs.papermc.io/paper/dev/pdc) 或 NBT 存储在书籍中.
 
 哈希值可以是任意字符串. 可以使用外部工具生成带有指定哈希值的 NBT 标签的书籍, 并将书籍数据附加到外部存储中, 实现书籍数据的转移.
 
