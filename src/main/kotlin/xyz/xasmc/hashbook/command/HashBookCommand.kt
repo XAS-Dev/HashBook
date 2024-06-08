@@ -60,7 +60,7 @@ object HashBookCommand {
             .withPermission("xasmc.hashbook.command.searchbook")
             .withArguments(StringArgument("incompleteHash"))
             .executes(CommandExecutor { sender, args ->
-                sender.sendMiniMessage("$msgTitle <dark_green>搜索到以下结果:")
+                sender.sendMiniMessage("$msgTitle <dark_green>搜索到以下结果")
                 StorageServices.search(args["incompleteHash"] as String).forEach {
                     val copyMsg = MessageUtil.copyMsg("[点击复制]", it.first, "<gold>点击复制")
                     sender.sendMiniMessage("<light_purple>==============================")
@@ -114,10 +114,11 @@ object HashBookCommand {
             )
             .executes(CommandExecutor { sender, _ ->
                 sender.sendMiniMessage("$msgTitle HashBook is Running!")
-                sender.sendMiniMessage("<aqua>debug</aqua>: <green>${HashBook.config.debug}")
-                sender.sendMiniMessage("<aqua>storage_mode</aqua>: <green>${HashBook.config.storageMode}")
-                sender.sendMiniMessage("<aqua>item_data_mode</aqua>: <green>${HashBook.config.itemDataMode}")
-                sender.sendMiniMessage("")
+                sender.sendMiniMessage("$msgTitle <aqua>debug</aqua>: <green>${HashBook.config.debug}")
+                sender.sendMiniMessage("$msgTitle <aqua>storage_mode</aqua>: <green>${HashBook.config.storageMode}")
+                sender.sendMiniMessage("$msgTitle <aqua>item_data_mode</aqua>: <green>${HashBook.config.itemDataMode}")
+                sender.sendMiniMessage("$msgTitle <aqua>set_lore</aqua>: <green>${HashBook.config.setLore}")
+                sender.sendMiniMessage("$msgTitle <aqua>lore_content</aqua>: <green>${HashBook.config.loreContent}")
             })
 
         return command
