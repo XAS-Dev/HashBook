@@ -29,7 +29,7 @@ object HashBookCommand {
         val calcHashCommand = CommandAPICommand("calcHash")
             .executes(CommandExecutor { sender, args ->
                 val player = checkPlayer(sender) ?: return@CommandExecutor
-                val (item) = checkHandItem(player, Material.WRITTEN_BOOK) ?: return@CommandExecutor
+                val (item) = checkWrittenBook(player) ?: return@CommandExecutor
                 val bookMeta = item.itemMeta as BookMeta
                 val hash = BookUtil.generateHash(bookMeta)
                 player.sendMiniMessage("$msgTitle <aqua>hash</aqua>: <green>${hash}")
@@ -40,7 +40,7 @@ object HashBookCommand {
             .withArguments(StringArgument("hash"))
             .executes(CommandExecutor { sender, args ->
                 val player = checkPlayer(sender) ?: return@CommandExecutor
-                val (item) = checkHandItem(player, Material.WRITTEN_BOOK) ?: return@CommandExecutor
+                val (item) = checkWrittenBook(player) ?: return@CommandExecutor
                 val hash =
                     ItemDataServices.getItemData(item, "HashBook.hash", ItemDataServices.DataType.String) ?: "<null>"
                 ItemDataServices.setItemData(
@@ -55,7 +55,7 @@ object HashBookCommand {
         val hashCommand = CommandAPICommand("hash")
             .executes(CommandExecutor { sender, args ->
                 val player = checkPlayer(sender) ?: return@CommandExecutor
-                val (item, hand) = checkHandItem(player, Material.WRITTEN_BOOK) ?: return@CommandExecutor
+                val (item, hand) = checkWrittenBook(player) ?: return@CommandExecutor
                 BookUtil.storeBook(item, player, hand)
                 player.sendMiniMessage("$msgTitle <dark_green>完成")
             })
@@ -63,7 +63,7 @@ object HashBookCommand {
         val bookInfoCommand = CommandAPICommand("bookInfo")
             .executes(CommandExecutor { sender, _ ->
                 val player = checkPlayer(sender) ?: return@CommandExecutor
-                val (item) = checkHandItem(player, Material.WRITTEN_BOOK) ?: return@CommandExecutor
+                val (item) = checkWrittenBook(player) ?: return@CommandExecutor
                 val bookMeta = item.itemMeta as BookMeta
 
                 val title = bookMeta.title ?: "<null>"
@@ -101,10 +101,11 @@ object HashBookCommand {
         return sender
     }
 
-    private fun checkHandItem(player: Player, type: Material): Pair<ItemStack, EquipmentSlot>? {
+    private fun checkWrittenBook(player: Player): Pair<ItemStack, EquipmentSlot>? {
         var pair = Pair(player.inventory.itemInMainHand, EquipmentSlot.HAND)
-        if (pair.first.type != type) pair = Pair(player.inventory.itemInOffHand, EquipmentSlot.OFF_HAND)
-        if (pair.first.type != type) {
+        if (pair.first.type != Material.WRITTEN_BOOK) pair =
+            Pair(player.inventory.itemInOffHand, EquipmentSlot.OFF_HAND)
+        if (pair.first.type != Material.WRITTEN_BOOK) {
             player.sendMiniMessage("<yellow>未检测到手持成书")
             return null
         }
