@@ -24,7 +24,7 @@ object MessageUtil {
     }
 
     fun shortHashMessage(hash: String): String {
-        val shortHash = hash.substring(0..hash.length.coerceAtMost(6))
+        val shortHash = hash.substring(0..6.coerceAtMost(hash.length - 1))
         return copyMsg("$shortHash <i><gold>[点击复制]</gold></i>", hash, "<green>$hash</green>")
     }
 
