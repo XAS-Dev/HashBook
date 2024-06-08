@@ -119,7 +119,7 @@ object HashBookCommand {
                 sender.sendMiniMessage("$msgTitle <aqua>storage_mode</aqua>: <green>${HashBook.config.storageMode}")
                 sender.sendMiniMessage("$msgTitle <aqua>item_data_mode</aqua>: <green>${HashBook.config.itemDataMode}")
                 sender.sendMiniMessage("$msgTitle <aqua>set_lore</aqua>: <green>${HashBook.config.setLore}")
-                sender.sendMiniMessage("$msgTitle <aqua>lore_content</aqua>: <green>${HashBook.config.loreContent}")
+                sender.sendMiniMessage("$msgTitle <aqua>lore_content</aqua>: <i><green>${HashBook.config.loreContent}</i>")
             })
 
         return command

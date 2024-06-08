@@ -25,7 +25,7 @@ object MessageUtil {
 
     fun shortHashMessage(hash: String): String {
         val shortHash = hash.substring(0..6)
-        return copyMsg(shortHash, hash, "<green>$hash</green>")
+        return copyMsg("$shortHash <i><gold>[点击复制]</gold></i>", hash, "<green>$hash</green>")
     }
 
     infix fun Player.sendMiniMessage(message: String) =
