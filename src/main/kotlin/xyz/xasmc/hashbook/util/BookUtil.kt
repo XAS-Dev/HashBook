@@ -13,6 +13,7 @@ import xyz.xasmc.hashbook.service.StorageServices
 import xyz.xasmc.hashbook.util.MessageUtil.debugMiniMessage
 import xyz.xasmc.hashbook.util.MessageUtil.msgTitle
 import xyz.xasmc.hashbook.util.MessageUtil.sendMiniMessage
+import xyz.xasmc.hashbook.util.MessageUtil.shortHashMessage
 import java.util.*
 
 object BookUtil {
@@ -69,10 +70,10 @@ object BookUtil {
             val serialized = serializePages(bookMeta.pages())
             val hash = HashUtil.HashString(serialized)
             StorageServices.save(hash, serialized)
-            val copyMsg = MessageUtil.copyMsg("[点击复制]", hash, "<gold>点击复制")
+            val shortHashMsg = shortHashMessage(hash)
             player.debugMiniMessage("$msgTitle <aqua>[debug]<dark_green>已存储成书书页</dark_green>")
-            player.debugMiniMessage("$msgTitle <aqua>[debug]<aqua>hash</aqua>: <green>$hash</green> <gold>$copyMsg</gold>")
-            player.debugMiniMessage("$msgTitle <aqua>[debug]<aqua>meta</aqua>: <green>$bookMeta</green>")
+            player.debugMiniMessage("$msgTitle <aqua>[debug]<aqua>hash</aqua>: <green>$shortHashMsg")
+            player.debugMiniMessage("$msgTitle <aqua>[debug]<aqua>meta</aqua>: <green>$bookMeta")
 
             newItem = ItemDataServices.setItemData(
                 newItem, "HashBook.Hash", ItemDataServices.DataType.String, hash

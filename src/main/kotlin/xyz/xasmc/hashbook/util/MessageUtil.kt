@@ -23,6 +23,11 @@ object MessageUtil {
         )
     }
 
+    fun shortHashMessage(hash: String): String {
+        val shortHash = hash.substring(0..6)
+        return copyMsg(shortHash, hash, "<green>$hash</green>")
+    }
+
     infix fun Player.sendMiniMessage(message: String) =
         this.sendMessage(mm.deserialize(message))
 

@@ -14,9 +14,9 @@ import xyz.xasmc.hashbook.HashBook
 import xyz.xasmc.hashbook.service.ItemDataServices
 import xyz.xasmc.hashbook.service.StorageServices
 import xyz.xasmc.hashbook.util.BookUtil
-import xyz.xasmc.hashbook.util.MessageUtil
 import xyz.xasmc.hashbook.util.MessageUtil.msgTitle
 import xyz.xasmc.hashbook.util.MessageUtil.sendMiniMessage
+import xyz.xasmc.hashbook.util.MessageUtil.shortHashMessage
 
 object HashBookCommand {
     fun create(): CommandAPICommand {
@@ -35,8 +35,8 @@ object HashBookCommand {
                 val (item) = checkWrittenBook(player) ?: return@CommandExecutor
                 val bookMeta = item.itemMeta as BookMeta
                 val hash = BookUtil.generateHash(bookMeta)
-                val copyMsg = MessageUtil.copyMsg("[点击复制]", hash, "<gold>点击复制")
-                player.sendMiniMessage("$msgTitle <aqua>hash</aqua>: <green>${hash}</green> <gold>$copyMsg</gold>")
+                val shortHashMsg = shortHashMessage(hash)
+                player.sendMiniMessage("$msgTitle <aqua>hash</aqua>: <green>$shortHashMsg")
             })
 
         val setHashCommand = CommandAPICommand("setHash")
@@ -49,23 +49,24 @@ object HashBookCommand {
                     ItemDataServices.getItemData(item, "HashBook.hash", ItemDataServices.DataType.String) ?: "<null>"
                 val newHash = args["hash"] as String
                 ItemDataServices.setItemData(item, "HashBook.hash", ItemDataServices.DataType.String, newHash)
-                val oldHashCopyMsg = MessageUtil.copyMsg("[点击复制]", oldHash, "<gold>点击复制")
-                val newHashCopyMsg = MessageUtil.copyMsg("[点击复制]", newHash, "<gold>点击复制")
+                val oldShortHashMsg = shortHashMessage(oldHash)
+                val newShortHashMsg = shortHashMessage(newHash)
                 player.sendMiniMessage("$msgTitle <dark_green>已修改成书哈希")
-                player.sendMiniMessage("$msgTitle <aqua>old_hash</aqua>: <green>$oldHash</green> <gold>$oldHashCopyMsg</gold>")
-                player.sendMiniMessage("$msgTitle <aqua>new_hash</aqua>: <green>$newHash</green> <gold>$newHashCopyMsg</gold>")
+                player.sendMiniMessage("$msgTitle <aqua>old_hash</aqua>: <green>$oldShortHashMsg")
+                player.sendMiniMessage("$msgTitle <aqua>new_hash</aqua>: <green>$newShortHashMsg")
             })
 
         val searchBookCommand = CommandAPICommand("searchBook")
             .withPermission("xasmc.hashbook.command.searchbook")
             .withArguments(StringArgument("incompleteHash"))
             .executes(CommandExecutor { sender, args ->
+                val incompleteHash = args["incompleteHash"] as String
                 sender.sendMiniMessage("$msgTitle <dark_green>搜索到以下结果")
-                StorageServices.search(args["incompleteHash"] as String).forEach {
-                    val copyMsg = MessageUtil.copyMsg("[点击复制]", it.first, "<gold>点击复制")
+                StorageServices.search(incompleteHash).forEach {
+                    val shortHashMsg = shortHashMessage(it.first)
                     sender.sendMiniMessage("<light_purple>==============================")
-                    sender.sendMiniMessage("$msgTitle <aqua>hash</aqua>: <green>${it.first} <gold>${copyMsg}</gold>")
-                    sender.sendMiniMessage("$msgTitle <aqua>content:")
+                    sender.sendMiniMessage("$msgTitle <aqua>hash</aqua>: <green>$shortHashMsg")
+                    sender.sendMiniMessage("$msgTitle <aqua>content</aqua>:")
                     sender.sendMiniMessage(it.second)
                 }
             })
@@ -95,11 +96,11 @@ object HashBookCommand {
 
                 Bukkit.getLogger().info(hash.javaClass.name)
 
-                val copyMsg = MessageUtil.copyMsg("[点击复制]", hash, "<gold>点击复制")
+                val shortHashMsg = shortHashMessage(hash)
                 player.sendMiniMessage("$msgTitle <blue>HashBook Book Info")
-                player.sendMiniMessage("$msgTitle <aqua>title</aqua>: <green>${title}")
-                player.sendMiniMessage("$msgTitle <aqua>author</aqua>: <green>${author}")
-                player.sendMiniMessage("$msgTitle <aqua>hash</aqua>: <green>${hash}</green> <gold>$copyMsg</gold>")
+                player.sendMiniMessage("$msgTitle <aqua>title</aqua>: <green>$title")
+                player.sendMiniMessage("$msgTitle <aqua>author</aqua>: <green>$author")
+                player.sendMiniMessage("$msgTitle <aqua>hash</aqua>: <green>$shortHashMsg")
             })
 
         val command = CommandAPICommand("hashbook")
