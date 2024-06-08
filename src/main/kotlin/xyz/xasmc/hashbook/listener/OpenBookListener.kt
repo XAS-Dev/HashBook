@@ -10,6 +10,7 @@ import xyz.xasmc.hashbook.HashBook
 import xyz.xasmc.hashbook.service.ItemDataServices
 import xyz.xasmc.hashbook.service.StorageServices
 import xyz.xasmc.hashbook.util.BookUtil
+import xyz.xasmc.hashbook.util.MessageUtil
 import xyz.xasmc.hashbook.util.MessageUtil.debugMiniMessage
 import xyz.xasmc.hashbook.util.MessageUtil.sendMiniMessage
 
@@ -39,11 +40,13 @@ class OpenBookListener : Listener {
         }
         val bookMeta = item.itemMeta as BookMeta
         bookMeta.pages(BookUtil.deserializePages(StorageServices.read(hash) ?: run {
-            player.sendMiniMessage("$msgTitle <yellow>[warn] 无法读取成书书页, hash: $hash")
+            val copyMsg = MessageUtil.copyMsg("[点击复制]", hash, "<gold>点击复制")
+            player.sendMiniMessage("$msgTitle <yellow>[warn] 无法读取成书书页, <aqua>hash</aqua>: <green>$hash</green> <gold>$copyMsg</gold>")
             return@onPlayerInteract
         }))
+        val copyMsg = MessageUtil.copyMsg("[点击复制]", hash, "<gold>点击复制")
         player.openBook(bookMeta)
-        player.debugMiniMessage("$msgTitle <aqua>[debug] <dark_green>成功替换数据, hash: $hash")
+        player.debugMiniMessage("$msgTitle <aqua>[debug] <dark_green>成功替换数据, <aqua>hash</aqua>: <green>$hash</green> <gold>$copyMsg</gold>")
         event.isCancelled = true
     }
 }

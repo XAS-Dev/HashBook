@@ -9,7 +9,9 @@ softdepend:
   - NBTAPI
 
 permissions:
-  xasmc.hashbook.command.sethash:
+  "xasmc.hashbook.command.sethash":
     default: op
-  xasmc.hashbook.command.reload:
+  "xasmc.hashbook.command.reload":
+    default: op
+  "xasmc.hashbook.command.searchbook":
     default: op

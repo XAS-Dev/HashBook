@@ -69,7 +69,8 @@ object BookUtil {
             val serialized = serializePages(bookMeta.pages())
             val hash = HashUtil.HashString(serialized)
             StorageServices.save(hash, serialized)
-            player.debugMiniMessage("$msgTitle <aqua>[debug]<dark_green>已存储成书书页</dark_green> <aqua>hash</aqua>: <green>$hash</green> <aqua>meta</aqua>: <green>$bookMeta</green>")
+            val copyMsg = MessageUtil.copyMsg("[点击复制]", hash, "<gold>点击复制")
+            player.debugMiniMessage("$msgTitle <aqua>[debug]<dark_green>已存储成书书页</dark_green> <aqua>hash</aqua>: <green>$hash</green> <gold>$copyMsg</gold> <aqua>meta</aqua>: <green>$bookMeta</green>")
 
             newItem = ItemDataServices.setItemData(
                 newItem, "HashBook.Hash", ItemDataServices.DataType.String, hash

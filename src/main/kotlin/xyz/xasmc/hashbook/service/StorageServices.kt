@@ -5,8 +5,8 @@ import xyz.xasmc.hashbook.config.StorageMode.*
 
 interface StorageServices {
     fun save(hash: String, content: String)
-
     fun read(hash: String): String?
+    fun search(incompleteHash: String): List<Pair<String, String>>
 
     companion object {
         lateinit var instance: StorageServices
@@ -20,6 +20,7 @@ interface StorageServices {
         }
 
         fun save(hash: String, content: String) = instance.save(hash, content)
-        fun read(hash: String): String? = instance.read(hash)
+        fun read(hash: String) = instance.read(hash)
+        fun search(incompleteHash: String) = instance.search(incompleteHash)
     }
 }
