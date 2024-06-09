@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.BookMeta
 import xyz.xasmc.hashbook.HashBook
 import xyz.xasmc.hashbook.service.ItemDataServices
 import xyz.xasmc.hashbook.service.StorageServices
+import xyz.xasmc.hashbook.util.BlockUtil
 import xyz.xasmc.hashbook.util.BookUtil
 import xyz.xasmc.hashbook.util.MessageUtil.debugMiniMessage
 import xyz.xasmc.hashbook.util.MessageUtil.sendMiniMessage
@@ -18,13 +19,15 @@ import xyz.xasmc.hashbook.util.MessageUtil.shortHashMessage
 class OpenBookListener : Listener {
     @EventHandler
     fun onPlayerInteract(event: PlayerInteractEvent) {
-        if (!(event.action == Action.RIGHT_CLICK_AIR || event.action == Action.RIGHT_CLICK_BLOCK)) return
+        if (event.action == Action.RIGHT_CLICK_BLOCK && !BlockUtil.checkInteractiveBlock(event.clickedBlock ?: return))
+        else if (event.action == Action.RIGHT_CLICK_AIR)
+        else return
 
         val msgTitle = "<dark_aqua>[HashBook]</dark_aqua>"
 
         val player = event.player
         val hand = event.hand ?: run {
-            player.sendMiniMessage("$msgTitle <yellow>[warn] 无法获取装备槽")
+            player.debugMiniMessage("$msgTitle <aqua>[debug] 无法获取装备槽")
             return@onPlayerInteract
         }
 
