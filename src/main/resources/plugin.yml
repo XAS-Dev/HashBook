@@ -1,7 +1,7 @@
 name: HashBook
 version: '${version}'
 main: xyz.xasmc.hashbook.HashBook
-api-version: '1.18'
+api-version: '1.20'
 
 depend:
   - CommandAPI

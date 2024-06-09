@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT")
     compileOnly("dev.jorel:commandapi-bukkit-core:9.4.2")
     compileOnly("de.tr7zw:item-nbt-api-plugin:2.9.1")
     compileOnly("net.kyori:adventure-text-minimessage:4.17.0") {}
