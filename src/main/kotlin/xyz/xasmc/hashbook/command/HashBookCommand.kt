@@ -149,7 +149,6 @@ object HashBookCommand {
             })
 
         val command = CommandAPICommand("hashbook")
-            .withPermission("xasmc.hashbook.command.hashbook")
             .withSubcommands(
                 reloadCommand,
                 calcHashCommand,

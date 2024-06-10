@@ -9,8 +9,6 @@ softdepend:
   - NBTAPI
 
 permissions:
-  "xasmc.hashbook.command.hashbook":
-    default: not op
   "xasmc.hashbook.command.reload":
     default: op
   "xasmc.hashbook.command.calchash":
