@@ -17,15 +17,12 @@ object MarkUtil {
         val count = textList.size
         val interval = 0.2
         val offset = -0.4
-
         val marks = playerMark[player] ?: mutableListOf<ArmorStand>().also { playerMark[player] = it }
-
         val currentCount = marks.size
         when {
             count > currentCount -> repeat(count - currentCount) { marks.add(createArmorStand(world)) }
             count < currentCount -> repeat(currentCount - count) { marks.removeLast()?.remove() }
         }
-
         val top = location.clone().add(0.0, interval * count / 2 + offset, 0.0)
         textList.forEachIndexed { i, it ->
             val mark = playerMark[player]!![i]

@@ -5,6 +5,7 @@ import org.bukkit.block.ChiseledBookshelf
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerMoveEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.inventory.meta.BookMeta.Generation.*
 import xyz.xasmc.hashbook.util.MarkUtil
@@ -57,5 +58,10 @@ class BookshelfListener : Listener {
             nameSb.append("\n<gray>$generation")
         }
         MarkUtil.updateMark(player, markLocation.toLocation(world), nameSb.toString())
+    }
+
+    @EventHandler
+    fun onPlayerQuit(event: PlayerQuitEvent) {
+        MarkUtil.removeMark(event.player)
     }
 }
