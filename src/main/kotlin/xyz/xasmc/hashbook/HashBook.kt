@@ -5,21 +5,24 @@ import org.bukkit.plugin.java.JavaPlugin
 import xyz.xasmc.hashbook.command.HashBookCommand
 import xyz.xasmc.hashbook.config.ConfigLoader
 import xyz.xasmc.hashbook.config.PluginConfig
+import xyz.xasmc.hashbook.listener.BookshelfListener
 import xyz.xasmc.hashbook.listener.OpenBookListener
 import xyz.xasmc.hashbook.service.ItemDataServices
 import xyz.xasmc.hashbook.service.StorageServices
+import xyz.xasmc.hashbook.util.MarkUtil
 
 class HashBook : JavaPlugin() {
     override fun onEnable() {
-        HashBook.instance = this
+        instance = this
         this.load()
 
+        Bukkit.getPluginManager().registerEvents(BookshelfListener(), this)
         Bukkit.getPluginManager().registerEvents(OpenBookListener(), this)
         HashBookCommand.create().register(this)
     }
 
     override fun onDisable() {
-
+        MarkUtil.clearAllMark()
     }
 
     fun load() {
