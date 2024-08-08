@@ -1,17 +1,19 @@
 package xyz.xasmc.hashbook.util
 
 import net.kyori.adventure.text.Component
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
+import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.json.simple.JSONArray
 import org.json.simple.parser.JSONParser
 import xyz.xasmc.hashbook.HashBook
 import xyz.xasmc.hashbook.service.ItemDataServices
 import xyz.xasmc.hashbook.service.StorageServices
 import xyz.xasmc.hashbook.util.MessageUtil.debugMiniMessage
-import xyz.xasmc.hashbook.util.MessageUtil.msgTitle
+import xyz.xasmc.hashbook.util.MessageUtil.MSG_TITLE
 import xyz.xasmc.hashbook.util.MessageUtil.sendMiniMessage
 import xyz.xasmc.hashbook.util.MessageUtil.shortHashMessage
 import java.util.*
@@ -68,17 +70,17 @@ object BookUtil {
             }
 
             val serialized = serializePages(bookMeta.pages())
-            val hash = HashUtil.HashString(serialized)
+            val hash = HashUtil.hashString(serialized)
             StorageServices.save(hash, serialized)
             val shortHashMsg = shortHashMessage(hash)
-            player.debugMiniMessage("$msgTitle <aqua>[debug]<dark_green>已存储成书书页</dark_green>")
-            player.debugMiniMessage("$msgTitle <aqua>[debug]<aqua>hash</aqua>: <green>$shortHashMsg")
-            player.debugMiniMessage("$msgTitle <aqua>[debug]<aqua>meta</aqua>: <green>$bookMeta")
+            player.debugMiniMessage("$MSG_TITLE <aqua>[debug]<dark_green>已存储成书书页</dark_green>")
+            player.debugMiniMessage("$MSG_TITLE <aqua>[debug]<aqua>hash</aqua>: <green>$shortHashMsg")
+            player.debugMiniMessage("$MSG_TITLE <aqua>[debug]<aqua>meta</aqua>: <green>$bookMeta")
 
             newItem = ItemDataServices.setItemData(
                 newItem, "HashBook.Hash", ItemDataServices.DataType.String, hash
             ) ?: run {
-                player.sendMiniMessage("$msgTitle <yellow>[warn] 写入哈希失败")
+                player.sendMiniMessage("$MSG_TITLE <yellow>[warn] 写入哈希失败")
                 return false
             }
             setHash = true
@@ -88,16 +90,38 @@ object BookUtil {
             EquipmentSlot.HAND -> player.inventory.setItemInMainHand(newItem)
             EquipmentSlot.OFF_HAND -> player.inventory.setItemInOffHand(newItem)
             else -> return run {
-                player.sendMiniMessage("$msgTitle <yellow>[warn] 错误的装备槽")
+                player.sendMiniMessage("$MSG_TITLE <yellow>[warn] 错误的装备槽")
                 false
             }
         }
 
         when (Pair(cleanedPages, setHash)) {
-            Pair(true, true) -> player.sendMiniMessage("$msgTitle <dark_green>已清除书页并记录哈希值")
-            Pair(false, true) -> player.sendMiniMessage("$msgTitle <dark_green>已记录哈希值")
-            Pair(true, false) -> player.sendMiniMessage("$msgTitle <dark_green>已清除书页")
+            Pair(true, true) -> player.sendMiniMessage("$MSG_TITLE <dark_green>已清除书页并记录哈希值")
+            Pair(false, true) -> player.sendMiniMessage("$MSG_TITLE <dark_green>已记录哈希值")
+            Pair(true, false) -> player.sendMiniMessage("$MSG_TITLE <dark_green>已清除书页")
         }
         return true
+    }
+
+    fun getAbstract(item: ItemStack): String {
+        val nameSb = StringBuilder(I18nUtil.translate(item.type))
+        when (item.type) {
+            Material.WRITTEN_BOOK -> {
+                val meta = item.itemMeta as BookMeta
+                nameSb.append("\n").append(meta.title)
+                nameSb.append("\n<gray>").append(I18nUtil.getTranslate("book.byAuthor").format(meta.author))
+                nameSb.append("\n<gray>").append(I18nUtil.translate(meta.generation))
+            }
+
+            Material.ENCHANTED_BOOK -> {
+                val meta = item.itemMeta as EnchantmentStorageMeta
+                meta.storedEnchants.forEach {
+                    nameSb.append("\n<gray>").append(I18nUtil.translate(it.key, it.value))
+                }
+            }
+
+            else -> {}
+        }
+        return nameSb.toString()
     }
 }

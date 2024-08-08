@@ -8,7 +8,7 @@ import org.bukkit.entity.Player
 import xyz.xasmc.hashbook.HashBook
 
 object MessageUtil {
-    val msgTitle = "<dark_aqua>[HashBook]</dark_aqua>"
+    const val MSG_TITLE = "<dark_aqua>[HashBook]</dark_aqua>"
     val mm = MiniMessage.miniMessage()
 
     fun copyMsg(message: String, copy: String, hover: String? = null): String {

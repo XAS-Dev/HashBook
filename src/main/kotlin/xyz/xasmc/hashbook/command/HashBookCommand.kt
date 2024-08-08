@@ -5,7 +5,6 @@ import dev.jorel.commandapi.arguments.IntegerArgument
 import dev.jorel.commandapi.arguments.StringArgument
 import dev.jorel.commandapi.executors.CommandExecutor
 import net.kyori.adventure.text.Component
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -17,7 +16,7 @@ import xyz.xasmc.hashbook.service.ItemDataServices
 import xyz.xasmc.hashbook.service.StorageServices
 import xyz.xasmc.hashbook.util.BookUtil
 import xyz.xasmc.hashbook.util.MessageUtil
-import xyz.xasmc.hashbook.util.MessageUtil.msgTitle
+import xyz.xasmc.hashbook.util.MessageUtil.MSG_TITLE
 import xyz.xasmc.hashbook.util.MessageUtil.sendMiniMessage
 import xyz.xasmc.hashbook.util.MessageUtil.shortHashMessage
 
@@ -26,9 +25,9 @@ object HashBookCommand {
         val reloadCommand = CommandAPICommand("reload")
             .withPermission("xasmc.hashbook.command.reload")
             .executes(CommandExecutor { sender, _ ->
-                sender.sendMiniMessage("$msgTitle <dark_green>重新加载中")
+                sender.sendMiniMessage("$MSG_TITLE <dark_green>重新加载中")
                 HashBook.load()
-                sender.sendMiniMessage("$msgTitle <dark_green>重新加载完成")
+                sender.sendMiniMessage("$MSG_TITLE <dark_green>重新加载完成")
             })
 
         val calcHashCommand = CommandAPICommand("calcHash")
@@ -39,7 +38,7 @@ object HashBookCommand {
                 val bookMeta = item.itemMeta as BookMeta
                 val hash = BookUtil.generateHash(bookMeta)
                 val shortHashMsg = shortHashMessage(hash)
-                player.sendMiniMessage("$msgTitle <aqua>hash</aqua>: <green>$shortHashMsg")
+                player.sendMiniMessage("$MSG_TITLE <aqua>hash</aqua>: <green>$shortHashMsg")
             })
 
         val setHashCommand = CommandAPICommand("setHash")
@@ -54,9 +53,9 @@ object HashBookCommand {
                 ItemDataServices.setItemData(item, "HashBook.hash", ItemDataServices.DataType.String, newHash)
                 val oldShortHashMsg = shortHashMessage(oldHash)
                 val newShortHashMsg = shortHashMessage(newHash)
-                player.sendMiniMessage("$msgTitle <dark_green>已修改成书哈希")
-                player.sendMiniMessage("$msgTitle <aqua>old_hash</aqua>: <green>$oldShortHashMsg")
-                player.sendMiniMessage("$msgTitle <aqua>new_hash</aqua>: <green>$newShortHashMsg")
+                player.sendMiniMessage("$MSG_TITLE <dark_green>已修改成书哈希")
+                player.sendMiniMessage("$MSG_TITLE <aqua>old_hash</aqua>: <green>$oldShortHashMsg")
+                player.sendMiniMessage("$MSG_TITLE <aqua>new_hash</aqua>: <green>$newShortHashMsg")
             })
 
         val getPage = CommandAPICommand("getPage")
@@ -68,23 +67,23 @@ object HashBookCommand {
                 val realPage = page - 1
                 val data = StorageServices.read(hash) ?: run {
                     val shortHashMsg = shortHashMessage(hash)
-                    sender.sendMiniMessage("$msgTitle <dark_green>未找到成书数据")
-                    sender.sendMiniMessage("$msgTitle <aqua>hash</aqua>: <green>$shortHashMsg")
+                    sender.sendMiniMessage("$MSG_TITLE <dark_green>未找到成书数据")
+                    sender.sendMiniMessage("$MSG_TITLE <aqua>hash</aqua>: <green>$shortHashMsg")
                     return@CommandExecutor
                 }
                 val pageList = BookUtil.deserializePages(data)
                 if (pageList.isEmpty()) {
-                    sender.sendMiniMessage("$msgTitle <dark_green>该成书没有书页")
+                    sender.sendMiniMessage("$MSG_TITLE <dark_green>该成书没有书页")
                     return@CommandExecutor
                 }
                 if (pageList.size < page || page <= 0) {
-                    sender.sendMiniMessage("$msgTitle <dark_green>错误的页码")
+                    sender.sendMiniMessage("$MSG_TITLE <dark_green>错误的页码")
                     return@CommandExecutor
                 }
 
                 val shortHashMsg = shortHashMessage(hash)
                 val message = Component.text()
-                    .append(MessageUtil.mm.deserialize("$msgTitle <dark_green>Book: <green>$shortHashMsg</green> Page $page</dark_green>\n"))
+                    .append(MessageUtil.mm.deserialize("$MSG_TITLE <dark_green>Book: <green>$shortHashMsg</green> Page $page</dark_green>\n"))
                     .append(pageList[realPage])
                 sender.sendMessage(message)
 
@@ -99,18 +98,18 @@ object HashBookCommand {
                 val incompleteHash = args["incompleteHash"] as String
                 val searchResult = StorageServices.search(incompleteHash)
                 sender.sendMiniMessage(
-                    if (searchResult.isEmpty()) "$msgTitle <dark_green>未搜索到结果"
-                    else "$msgTitle <dark_green>搜索到 ${searchResult.size} 条结果"
+                    if (searchResult.isEmpty()) "$MSG_TITLE <dark_green>未搜索到结果"
+                    else "$MSG_TITLE <dark_green>搜索到 ${searchResult.size} 条结果"
                 )
                 searchResult.forEach { result ->
                     val pageList = BookUtil.deserializePages(result.second)
                     val totalPage = pageList.size
                     val shortHashMsg = shortHashMessage(result.first)
                     sender.sendMiniMessage("<light_purple>========================================")
-                    sender.sendMiniMessage("$msgTitle <aqua>hash</aqua>: <green>$shortHashMsg")
+                    sender.sendMiniMessage("$MSG_TITLE <aqua>hash</aqua>: <green>$shortHashMsg")
                     sender.sendMessage(
                         Component.text()
-                            .append(MessageUtil.mm.deserialize("$msgTitle <aqua>content</aqua>:\n"))
+                            .append(MessageUtil.mm.deserialize("$MSG_TITLE <aqua>content</aqua>:\n"))
                             .also { if (totalPage > 0) it.append(pageList.first()) }
                     )
                     sender.sendMessage(createPageBarMessage(result.first, 0, totalPage))
@@ -123,7 +122,7 @@ object HashBookCommand {
                 val player = checkPlayer(sender) ?: return@CommandExecutor
                 val (item, hand) = checkWrittenBook(player) ?: return@CommandExecutor
                 BookUtil.storeBook(item, player, hand)
-                player.sendMiniMessage("$msgTitle <dark_green>完成")
+                player.sendMiniMessage("$MSG_TITLE <dark_green>完成")
             })
 
         val bookInfoCommand = CommandAPICommand("bookInfo")
@@ -139,13 +138,13 @@ object HashBookCommand {
                     item, "HashBook.Hash", ItemDataServices.DataType.String
                 ) ?: "<null>"
 
-                Bukkit.getLogger().info(hash.javaClass.name)
+                HashBook.instance.logger.info(hash.javaClass.name)
 
                 val shortHashMsg = shortHashMessage(hash)
-                player.sendMiniMessage("$msgTitle <blue>HashBook Book Info")
-                player.sendMiniMessage("$msgTitle <aqua>title</aqua>: <green>$title")
-                player.sendMiniMessage("$msgTitle <aqua>author</aqua>: <green>$author")
-                player.sendMiniMessage("$msgTitle <aqua>hash</aqua>: <green>$shortHashMsg")
+                player.sendMiniMessage("$MSG_TITLE <blue>HashBook Book Info")
+                player.sendMiniMessage("$MSG_TITLE <aqua>title</aqua>: <green>$title")
+                player.sendMiniMessage("$MSG_TITLE <aqua>author</aqua>: <green>$author")
+                player.sendMiniMessage("$MSG_TITLE <aqua>hash</aqua>: <green>$shortHashMsg")
             })
 
         val command = CommandAPICommand("hashbook")
@@ -160,12 +159,12 @@ object HashBookCommand {
                 bookInfoCommand
             )
             .executes(CommandExecutor { sender, _ ->
-                sender.sendMiniMessage("$msgTitle HashBook is Running!")
-                sender.sendMiniMessage("$msgTitle <aqua>debug</aqua>: <green>${HashBook.config.debug}")
-                sender.sendMiniMessage("$msgTitle <aqua>storage_mode</aqua>: <green>${HashBook.config.storageMode}")
-                sender.sendMiniMessage("$msgTitle <aqua>item_data_mode</aqua>: <green>${HashBook.config.itemDataMode}")
-                sender.sendMiniMessage("$msgTitle <aqua>set_lore</aqua>: <green>${HashBook.config.setLore}")
-                sender.sendMiniMessage("$msgTitle <aqua>lore_content</aqua>: <i><green>${HashBook.config.loreContent}</i>")
+                sender.sendMiniMessage("$MSG_TITLE HashBook is Running!")
+                sender.sendMiniMessage("$MSG_TITLE <aqua>debug</aqua>: <green>${HashBook.config.debug}")
+                sender.sendMiniMessage("$MSG_TITLE <aqua>storage_mode</aqua>: <green>${HashBook.config.storageMode}")
+                sender.sendMiniMessage("$MSG_TITLE <aqua>item_data_mode</aqua>: <green>${HashBook.config.itemDataMode}")
+                sender.sendMiniMessage("$MSG_TITLE <aqua>set_lore</aqua>: <green>${HashBook.config.setLore}")
+                sender.sendMiniMessage("$MSG_TITLE <aqua>lore_content</aqua>: <i><green>${HashBook.config.loreContent}</i>")
             })
 
         return command
