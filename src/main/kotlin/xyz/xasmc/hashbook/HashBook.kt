@@ -9,7 +9,9 @@ import xyz.xasmc.hashbook.listener.BookshelfListener
 import xyz.xasmc.hashbook.listener.OpenBookListener
 import xyz.xasmc.hashbook.service.ItemDataServices
 import xyz.xasmc.hashbook.service.StorageServices
+import xyz.xasmc.hashbook.util.I18nUtil
 import xyz.xasmc.hashbook.util.MarkUtil
+import java.io.File
 
 class HashBook : JavaPlugin() {
     override fun onEnable() {
@@ -26,6 +28,12 @@ class HashBook : JavaPlugin() {
     }
 
     fun load() {
+        val langDir = File(dataFolder, "lang")
+        if (!langDir.exists()) {
+            langDir.mkdir()
+            saveResource("lang/zh_cn.yml", true)
+        }
+        I18nUtil.loadTranslate(File(dataFolder, "lang/zh_cn.yml"))
         HashBook.config = ConfigLoader.loadConfig()
         ItemDataServices.load(HashBook.config)
         StorageServices.load(HashBook.config)

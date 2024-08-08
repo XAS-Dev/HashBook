@@ -7,7 +7,8 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.meta.BookMeta
-import org.bukkit.inventory.meta.BookMeta.Generation.*
+import org.bukkit.inventory.meta.EnchantmentStorageMeta
+import xyz.xasmc.hashbook.util.I18nUtil
 import xyz.xasmc.hashbook.util.MarkUtil
 
 
@@ -44,18 +45,23 @@ class BookshelfListener : Listener {
         }
         val normalizedEyeDirection = player.eyeLocation.direction.clone().normalize()
         val markLocation = hitPosition.clone().subtract(normalizedEyeDirection.multiply(0.1))
-        val nameSb = StringBuilder(item.type.name)
-        if (item.type == Material.WRITTEN_BOOK) {
-            val meta = item.itemMeta as BookMeta
-            nameSb.append("\n<aqua>${meta.title}\n<gray>${meta.author} 著")
-            val generation = when (meta.generation) {
-                ORIGINAL -> "原稿"
-                COPY_OF_ORIGINAL -> "原稿的副本"
-                COPY_OF_COPY -> "副本的副本"
-                TATTERED -> "破烂不堪"
-                null -> "原稿"
+        val nameSb = StringBuilder(I18nUtil.translate(item.type))
+        when (item.type) {
+            Material.WRITTEN_BOOK -> {
+                val meta = item.itemMeta as BookMeta
+                nameSb.append("\n").append(meta.title)
+                nameSb.append("\n<gray>").append(I18nUtil.getTranslate("book.byAuthor").format(meta.author))
+                nameSb.append("\n<gray>").append(I18nUtil.translate(meta.generation))
             }
-            nameSb.append("\n<gray>$generation")
+
+            Material.ENCHANTED_BOOK -> {
+                val meta = item.itemMeta as EnchantmentStorageMeta
+                meta.storedEnchants.forEach {
+                    nameSb.append("\n<gray>").append(I18nUtil.translate(it.key, it.value))
+                }
+            }
+
+            else -> {}
         }
         MarkUtil.updateMark(player, markLocation.toLocation(world), nameSb.toString())
     }
