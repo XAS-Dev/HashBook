@@ -21,7 +21,10 @@ class MarkListener : Listener {
     @EventHandler
     fun onPlayerMove(event: PlayerMoveEvent) {
         val player = event.player
-        if (player.gameMode == GameMode.SPECTATOR) return
+        if (player.gameMode == GameMode.SPECTATOR) {
+            MarkUtil.removeMark(player)
+            return
+        }
         val direction = player.eyeLocation.direction
         val maxDistance = 5.0
         val result = player.world.rayTraceBlocks(player.eyeLocation, direction, maxDistance)
