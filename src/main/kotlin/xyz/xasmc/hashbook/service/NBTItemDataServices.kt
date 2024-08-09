@@ -6,10 +6,7 @@ import org.bukkit.inventory.ItemStack
 
 class NBTItemDataServices : ItemDataServices {
     override fun <T> setItemData(
-        item: ItemStack,
-        path: String,
-        dataType: ItemDataServices.DataType<T>,
-        value: T
+        item: ItemStack, path: String, dataType: ItemDataServices.DataType<T>, value: T
     ): ItemStack? {
         val nbtItem = NBTItem(item)
         val (nbtPath, key) = splitPathAndKey(path)
@@ -29,22 +26,23 @@ class NBTItemDataServices : ItemDataServices {
         return nbtItem.item
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T> getItemData(item: ItemStack, path: String, dataType: ItemDataServices.DataType<T>): T? {
         val nbtItem = NBTItem(item)
         val (nbtPath, key) = splitPathAndKey(path)
         val compound = getNbtCompoundByPath(nbtItem, nbtPath) ?: return null
-
-        return if (compound.hasKey(path)) when (dataType) {
-            ItemDataServices.DataType.Byte -> compound.getByte(path) as T
-            ItemDataServices.DataType.Short -> compound.getShort(path) as T
-            ItemDataServices.DataType.Long -> compound.getLong(path) as T
-            ItemDataServices.DataType.ByteArray -> compound.getByteArray(path) as T
-            ItemDataServices.DataType.Double -> compound.getDouble(path) as T
-            ItemDataServices.DataType.Float -> compound.getFloat(path) as T
-            ItemDataServices.DataType.Boolean -> compound.getBoolean(path) as T
-            ItemDataServices.DataType.String -> compound.getString(path) as T
+        if (!compound.hasKey(key)) return null
+        return when (dataType) {
+            ItemDataServices.DataType.Byte -> compound.getByte(key)
+            ItemDataServices.DataType.Short -> compound.getShort(key)
+            ItemDataServices.DataType.Long -> compound.getLong(key)
+            ItemDataServices.DataType.ByteArray -> compound.getByteArray(key)
+            ItemDataServices.DataType.Double -> compound.getDouble(key)
+            ItemDataServices.DataType.Float -> compound.getFloat(key)
+            ItemDataServices.DataType.Boolean -> compound.getBoolean(key)
+            ItemDataServices.DataType.String -> compound.getString(key)
             else -> null
-        } else null
+        } as T?
     }
 
     override fun hasItemData(item: ItemStack, path: String): Boolean {
@@ -65,5 +63,4 @@ class NBTItemDataServices : ItemDataServices {
         }
         return current
     }
-
 }
