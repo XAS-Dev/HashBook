@@ -1,5 +1,6 @@
 package xyz.xasmc.hashbook.listener
 
+import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.ChiseledBookshelf
@@ -20,6 +21,7 @@ class MarkListener : Listener {
     @EventHandler
     fun onPlayerMove(event: PlayerMoveEvent) {
         val player = event.player
+        if (player.gameMode == GameMode.SPECTATOR) return
         val direction = player.eyeLocation.direction
         val maxDistance = 5.0
         val result = player.world.rayTraceBlocks(player.eyeLocation, direction, maxDistance)
